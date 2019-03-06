@@ -1,0 +1,100 @@
+Creando proyecto con django (Tutorial)
+	> Primero situarme donde almacenar el codigo
+	> Crear directorio
+		django-admin startproject mysite
+	> Ver si se creo en el directorio, se creara lo siguiente>
+		< env, directorio raiz
+		< mysite, para interactuar con el proyecto.
+			< __init__.py, python lo considera un paquete
+        	< settings.py, ajuste del proyecto
+        	< urls.py, declaraciones url
+        	< wsgi.py, entrada para los servidores compatibles con WSGI
+    > Comprobar proyecto funcione(ubicarno bien en el directorio)
+    	python manage.py runserver
+    (En caso que el docke presente fallo detener con el comando
+    sudo docker stop $(sudo docker ps -aq))
+    > Visitar por medio de la direccion
+    > Mediante siguiente comando se crea el directorio polls
+    	python manage.py startapp polls
+    > Escribir la primer visita, abrir archivo polls del directorio polls y escribir
+    	from django.http import HttpResponse
+
+
+		def index(request):
+    		return HttpResponse("Hello, world. You're at the polls index.")
+    > Creamos un archivo urls.py en el directorio polls, en este archivo el codigo
+    	from django.urls import path
+
+    	from . import views
+
+    	urlpatterns = [
+    	    path('', views.index, name='index'),
+    	]
+    > Abrimos el archivo urls del directorio mysite, y escribo el codigo
+    	from django.contrib import admin
+		from django.urls import include, path
+
+		urlpatterns = [
+    		path('polls/', include('polls.urls')),
+    		path('admin/', admin.site.urls),
+		]
+	> Compruebo mediante el comando
+		python manage.py runserver
+	> Y me direcciono en
+		http://localhost:8000/polls/
+	> Mediante el navegador accedo y se me muestra el mensaje,
+	Hello, world. You're at the polls index.
+	> Al estar trabajando con SQLite, no se necesita comandos para crear la basede datos pues esta ya se a creo.
+	> Para crear las tablas en la base de datos se usa el comando
+		python manage.py migrate
+	> Paso a crear los modelos, abrir el archivo models.py del directorio polls, haciendo uso del codigo
+		from django.db import models
+
+
+		class Question(models.Model):
+		    question_text = models.CharField(max_length=200)
+		    pub_date = models.DateTimeField('date published')
+
+
+		class Choice(models.Model):
+		    question = models.ForeignKey(Question, on_delete=models.CASCADE)
+		    choice_text = models.CharField(max_length=200)
+		    votes = models.IntegerField(default=0)
+	> Agrego la ruta 'polls.apps.PollsConfig' en el archivo settings.py del directorio mysite, en la configuracion INSTALLED_APPS.
+	> En este punto django sabe incluir la aplicacion polls
+	> Mediante el siguiente comando indico que Django ha realizado cambio a sus modelos y que los guarde como una migracion.
+	> El comando sqlmigrate recibe nombres de migracion y devuelve su SQL
+	python manage.py sqlmigrate polls 0001
+	> Mediante el comando migrate crea las tablas modelos en la base de datos.
+	> Para jugar con la API, usamos el comando
+	python manage.py shell
+
+	/////////////////
+	> Creando usuario del admin
+		python manage.py createsuperuser
+			Username: admin
+			Email address: admin@example.com
+			Password: **********
+			Password (again): *********
+			Superuser created successfully.
+	> Comprobar que el servidor este en marcha
+		python manage.py runserver
+	> Accedo mediante http://127.0.0.1:8000/admin/
+	> Se agrego comandos al archivo admin.py del directorio polls, esto para que la encuesta se pueda modificar en el sitio
+	> Se exploro la funcionlida del sitio
+	> Se escribio mas visitas en el codigo del archivo views.py y estas visital al modilo polls.urls
+	> se agrego planillas al index por medio de codigo
+	> Se corrigieron codigo por que causaba errores al entrar al sitio
+	> Se utilizo sistema de plantillas.
+	> Se asigno nombre a la urls
+	> Se continuo con mas detalles de la encuesta mediante detail.html
+	> Ante los cambios que se iban haciendo, se paso a eliminar viejas visitas del index, detail y results.
+	> Se realizaron pruebas para identificar bug ya que el codigo contaba con uno intencionalmente para realizar pruebas con el bug.
+	> Simplemente se modifico el codigo de models.py y se corrigio
+	> Se realizo pruebas de simulacion de usuario interactuando con el codigo al nivel de visitas. Esto por medio de la terminal usando el comando
+		python manage.py shell
+	> Se paso a majora las vistas
+	> Probe un poco el cambiar la apariencia de la aplicacion por medio de un archivo .css
+	> Ya para terminar se personalizo mas el formulario del sitio administrativo.
+>>>>>
+
